@@ -8,9 +8,11 @@ const mongoose = require("mongoose");
 let server: Server;
 
 const main = async () => {
+  const port = configFiles?.port;
+  console.log(port);
   try {
-    server = app.listen(3000, () => {
-      logger.info("Server is running on port 3000");
+    server = app.listen(port, () => {
+      logger.info(`Server is running on port ${port}`);
     });
     await mongoose.connect(configFiles?.mongodb_url as string);
     logger.info("Connected to MongoDB successfully");
