@@ -1,44 +1,60 @@
 import winston from "winston";
 import fs from "node:fs";
 import path from "node:path";
+import { configFiles } from ".";
 const logDir = "logs";
-
 // Ensure logs directory exists
 if (!fs.existsSync(logDir)) {
   fs.mkdirSync(logDir);
 }
 
-// Log format
-const logFormat = winston.format.combine(
-  winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
-  winston.format.printf(
-    (info) => `${info.timestamp} [${info.level.toUpperCase()}]: ${info.message}`
-  )
-);
+// Log format - time stamp + level + message
+const logFormat = winston.format.printf(({ timestamp, level, message }) => {
+  return `${timestamp} [${level.toUpperCase()}]: ${message}`;
+});
 
 // Create logger
 const logger = winston.createLogger({
-  level: `${process?.env?.NODE_ENV === "dev" ? "debug" : "info"}`,
+  level: `${configFiles?.logging_level}`,
+  format: winston.format.combine(
+    winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" })
+  ),
+  // Define transports - where to send the messages
   transports: [
     new winston.transports.Console({
-      format: winston.format.combine(winston.format.colorize(), logFormat),
+      format: winston.format.combine(
+        winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+        winston.format.colorize({ all: true }), // colorize everything
+        winston.format.printf(({ timestamp, level, message }) => {
+          return `${timestamp} [${level.toUpperCase()}]: ${message}`;
+        })
+      ),
     }),
-    new winston.transports.File({
-      filename: path.join(logDir, "error.log"),
-      level: "error",
-    }),
+
+    // Where to send Error files
     new winston.transports.File({
       filename: path.join(
         logDir,
         `${new Date().toISOString().slice(0, 10)}.log`
       ),
+      format: winston.format.combine(
+        winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+        winston.format.printf(
+          ({ timestamp, level, message }) =>
+            `${timestamp} [${level.toUpperCase()}]: ${message}`
+        )
+      ),
+    }),
+
+    // All logs - infos, errors, debug, etc.
+    new winston.transports.File({
+      filename: path.join(
+        logDir,
+        `${new Date().toISOString().slice(0, 10)}.log`
+      ),
+      format: logFormat,
     }),
   ],
 });
-
-// For morgan integration
-(logger as any).stream = {
-  write: (message?: any) => logger.info(message.trim()),
-};
 
 export default logger;
