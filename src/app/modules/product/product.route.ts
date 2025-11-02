@@ -17,6 +17,6 @@ ProductRouter.post(
   validation(ProductValidationSchema),
   productController.createProduct
 );
-ProductRouter.patch("/update", (req, res) => {});
+ProductRouter.patch("/update/:id", productController.updateProduct);
 
 export default ProductRouter;

@@ -51,7 +51,24 @@ const createProduct = async (product: any) => {
     throw new AppError(500, "Failed to create product");
   }
 };
-const updateProduct = async () => {};
+const updateProduct = async (productId: string, data: Partial<TProduct>) => {
+  logger.info("Entered Update Product Service");
+  try {
+    const isExist = await productModel.findById(productId);
+    if (!isExist) {
+      throw new AppError(404, "Product not found");
+    }
+    const updatedProduct = await productModel.findByIdAndUpdate(
+      productId,
+      data,
+      {
+        new: true,
+      }
+    );
+    logger.info("Product updated successfully in service");
+    return updatedProduct;
+  } catch (error) {}
+};
 
 export const productService = {
   createProduct,

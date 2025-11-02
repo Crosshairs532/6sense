@@ -10,7 +10,7 @@ const createProduct = catchAsync(async (req, res) => {
   const data = { body: req?.body, file: req?.file };
   const result = await productService.createProduct(data);
   logger.info("Product created, sending response from controller");
-  console.log(result);
+
   SendResponse(res, {
     statusCode: status.OK,
     success: true,
@@ -18,7 +18,21 @@ const createProduct = catchAsync(async (req, res) => {
     data: result,
   });
 });
-const updateProduct = catchAsync(() => {});
+const updateProduct = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const data = req.body;
+  logger.info("Entered updateProduct controller");
+
+  const result = await productService.updateProduct(id, data);
+  logger.info("Product updated, sending response from controller");
+
+  SendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "Product updated successfully",
+    data: result,
+  });
+});
 
 export const productController = {
   createProduct,
