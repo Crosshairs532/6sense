@@ -6,7 +6,6 @@ export const generateProductCode = (name: string) => {
   let longestSubstrings = [];
   for (const char of LName) {
     const lastChar = longestSubstr[longestSubstr?.length - 1]?.charCodeAt(0);
-    console.log(longestSubstr, char, lastChar);
     if (lastChar) {
       if (char.charCodeAt(0) > lastChar) {
         longestSubstr += char;
@@ -50,4 +49,6 @@ export const generateProductCode = (name: string) => {
   const productCode = `${hash}-${0}${longestSubstrings}${LName.indexOf(
     longestSubstrings[longestSubstrings?.length - 1]
   )}`;
+
+  return productCode;
 };

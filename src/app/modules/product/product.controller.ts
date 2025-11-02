@@ -4,10 +4,13 @@ import { SendResponse } from "../../utils/SendResponse";
 import { productService } from "./product.service";
 import { status } from "http-status";
 
-const createProduct = catchAsync((req, res) => {
+const createProduct = catchAsync(async (req, res) => {
   logger.info("Entered createProduct controller");
-  const result = productService.createProduct(req.body);
+
+  const data = { body: req?.body, file: req?.file };
+  const result = await productService.createProduct(data);
   logger.info("Product created, sending response from controller");
+  console.log(result);
   SendResponse(res, {
     statusCode: status.OK,
     success: true,

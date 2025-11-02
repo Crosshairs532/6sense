@@ -21,7 +21,7 @@ const productSchema = new Schema<TProduct>({
     required: true,
     ref: "Category",
   },
-  Status: {
+  status: {
     type: Boolean,
     required: true,
   },
@@ -33,7 +33,7 @@ const productSchema = new Schema<TProduct>({
     type: String,
     required: true,
   },
-  ProductCode: {
+  productCode: {
     type: String,
     required: true,
     unique: true,
