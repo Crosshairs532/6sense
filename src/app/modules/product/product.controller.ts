@@ -34,7 +34,19 @@ const updateProduct = catchAsync(async (req, res) => {
   });
 });
 
+const getProduct = catchAsync(async (req, res) => {
+  logger.info("Entered getProduct controller");
+  const result = await productService.getProduct(req.query);
+  SendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "Product fetched successfully",
+    data: result,
+  });
+});
+
 export const productController = {
   createProduct,
   updateProduct,
+  getProduct,
 };

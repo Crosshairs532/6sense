@@ -1,3 +1,4 @@
+import QueryBuilder from "../../Builder/QueryBuilder";
 import logger from "../../config/logger";
 import AppError from "../../utils/AppError";
 import { Cloudinary } from "../../utils/Cloudinary";
@@ -5,6 +6,21 @@ import { generateProductCode } from "../../utils/generateProductCode";
 import { categoryModel } from "../category/category.module";
 import { TProduct } from "./product.interface";
 import { productModel } from "./product.module";
+
+const getProduct = async (query: any) => {
+  logger.info("Entered Get Product Service");
+  try {
+    console.log(query);
+    const products = new QueryBuilder(productModel.find({}), query)
+      .search(["name"])
+      .filter();
+
+    const result = await products.priceCalculation();
+    return result;
+  } catch (error) {
+    throw new AppError(500, "Failed to fetch products");
+  }
+};
 
 const createProduct = async (product: any) => {
   logger.info("Creating product in product service");
@@ -73,4 +89,5 @@ const updateProduct = async (productId: string, data: Partial<TProduct>) => {
 export const productService = {
   createProduct,
   updateProduct,
+  getProduct,
 };

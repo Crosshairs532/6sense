@@ -3,10 +3,11 @@ import { validation } from "../../middlewares/validation";
 import { ProductValidationSchema } from "./product.interface";
 import { productController } from "./product.controller";
 import { upload } from "../../utils/Cloudinary";
+import { catchAsync } from "../../utils/CatchAsynch";
 
 const ProductRouter = Router();
 
-// ProductRouter.get("/", ());
+ProductRouter.get("/", productController.getProduct);
 ProductRouter.post(
   "/create",
   upload.single("file"),
