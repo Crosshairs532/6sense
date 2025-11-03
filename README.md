@@ -1,1 +1,1 @@
-<img src="https://i.ibb.co.com/cztg488/Capture.png" alt='Data Model diagram'>
+![Data Model Diagram](https://i.ibb.co/cztg488/Capture.png)
